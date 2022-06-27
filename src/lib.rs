@@ -17,7 +17,7 @@ lazy_static! {
 }
 
 #[wasm_bindgen]
-pub fn decrypt(mut buffer: &mut[u8], key: &str) -> Vec<u8> {
+pub fn decrypt(mut buffer: &mut[u8], key: &str) -> String {
     let mut cipherMapLock = cipherMap.lock().unwrap();
     let stringKey = String::from(key);
     if !cipherMapLock.contains_key(&stringKey)
@@ -29,8 +29,25 @@ pub fn decrypt(mut buffer: &mut[u8], key: &str) -> Vec<u8> {
     let mut cipher = cipherMapLock.get(&stringKey).unwrap().lock().unwrap();
 
     cipher.apply_keystream(&mut buffer);
+    String::from_utf8(buffer[..].to_vec()).unwrap().to_string()
+}
+
+#[wasm_bindgen]
+pub fn decrypt_buffer(mut buffer: &mut[u8], key: &str) ->  Vec<u8> {
+    let mut cipherMapLock = cipherMap.lock().unwrap();
+    let stringKey = String::from(key);
+    if !cipherMapLock.contains_key(&stringKey)
+    {
+        let cipherKey = hex::decode("6b65796b65796b65796b65796b65796b65796b65796b6579").unwrap(); //'key'*8
+        cipherMapLock.insert(stringKey.to_string(), Mutex::new(Aes192Ctr::new_var(&cipherKey, &[0; 16]).unwrap()));
+    }
+
+    let mut cipher = cipherMapLock.get(&stringKey).unwrap().lock().unwrap();
+
+    cipher.apply_keystream(&mut buffer);
     buffer[..].to_vec()
 }
+
 
 #[wasm_bindgen]
 pub fn finish(key: &str)  {

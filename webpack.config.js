@@ -12,8 +12,9 @@ module.exports = {
         },
     },
     entry: {
-        index: path.resolve(__dirname, "./src/index.ts"),
-        sw: path.resolve(__dirname, "./src/sw.ts"),
+        index: path.resolve(__dirname, "./src_js/index.ts"),
+        sw: path.resolve(__dirname, "./src_js/sw.ts"),
+        sw_buffer: path.resolve(__dirname, "./src_js/sw_buffer.ts"),
     },
     output: {
         path: path.resolve(__dirname, "./dist"),

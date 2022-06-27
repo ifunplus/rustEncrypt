@@ -17,10 +17,10 @@ const key = Buffer.from(
     "hex"
 ).toString("utf8");
 
-app.get("/*.glb$/", function (req, res) {
+app.get("/*.json$/", function (req, res) {
     console.log("123");
     //先固定路径为例
-    const filepath = path.join(__dirname, "./public/models/Xbot.glb");
+    const filepath = path.join(__dirname, "./public/models/model.json");
     console.log("filepath: ", filepath);
     if (!fs.existsSync(filepath)) {
         res.status(404).send("");
